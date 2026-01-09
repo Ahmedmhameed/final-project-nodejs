@@ -1,0 +1,24 @@
+{
+  "name": "final-project",
+  "version": "1.0.0",
+  "description": "The project is a small web application that serves as a showcase for the latest news and updates about aid in Gaza. It automatically reads them from the Al-Mutaqaddimun website, then provides them through an API.",
+  "keywords": [
+    "nodejs",
+    "final-project"
+  ],
+  "homepage": "https://github.com/Ahmedmhameed/final-project-nodejs#readme",
+  "bugs": {
+    "url": "https://github.com/Ahmedmhameed/final-project-nodejs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahmedmhameed/final-project-nodejs.git"
+  },
+  "license": "ISC",
+  "author": "Ahmed Al-khateeb",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
