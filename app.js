@@ -1,5 +1,5 @@
 const express = require("express");
-const routes = require("./Routes");
+const routes = require("./routes");
 const createHttpError = require("http-errors");
 const middlewares = require("./middlewares");
 const { returnJson } = require("./my_modules/stander_respone");

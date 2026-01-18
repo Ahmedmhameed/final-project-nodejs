@@ -11,10 +11,4 @@ const dbConnection = (collection, cb) => {
     .catch();
 };
 
-// test Connection
-dbConnection("articals", async (db) => {
-  const articals = await db.findOne();
-  console.log(articals);
-});
-
 module.exports = dbConnection;

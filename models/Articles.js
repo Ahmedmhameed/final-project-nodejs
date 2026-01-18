@@ -1,0 +1,74 @@
+const { dbConnection } = require("../config");
+const { articleValidator } = require("../validators");
+const { ObjectId } = require("bson");
+
+class Article {
+  constructor(articaleData) {
+    this.articaleData = articaleData;
+  }
+  static articaleDbConnection(cb) {
+    dbConnection("articles", cb);
+  }
+
+  static saveAll(articles, cb) {
+    if (!Array.isArray(articles) || articles.length === 0) {
+      return cb({ status: false, message: "No articles to insert" });
+    }
+    Article.articaleDbConnection(async (collection) => {
+      try {
+        await collection.insertMany(articles, { ordered: false });
+        cb({ status: true });
+      } catch (err) {
+        cb({ status: false, message: err.message });
+      }
+    });
+  }
+  static getAllArticles() {
+    return new Promise((resolve, reject) => {
+      Article.articaleDbConnection(async (collection) => {
+        try {
+          const articles = await collection.find({}).toArray();
+          resolve({ status: true, data: articles });
+        } catch (err) {
+          reject({ status: false, message: err.message });
+        }
+      });
+    });
+  }
+  static getArticle(_article_id) {
+    return new Promise((resolve, reject) => {
+      Article.articaleDbConnection(async (collection) => {
+        try {
+          const _id = new ObjectId(_article_id);
+          const article = await collection.findOne({ _id });
+          resolve({ status: true, data: article });
+        } catch (err) {
+          reject({ status: false, message: err.message });
+        }
+      });
+    });
+  }
+
+  static validate(articaleData) {
+    try {
+      const validateResult = articleValidator.validate(articaleData);
+      return validateResult;
+    } catch (error) {
+      return { error: error };
+    }
+  }
+
+  static updateLikes(_article_id, likeCount) {
+    Article.articaleDbConnection(async (collection) => {
+      try {
+        const _id = new ObjectId(_article_id);
+
+        await collection.updateOne({ _id }, { $set: { likes: likeCount } });
+      } catch (err) {
+        return { status: false, message: err.message };
+      }
+    });
+  }
+}
+
+module.exports = Article;
