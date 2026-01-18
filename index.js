@@ -5,9 +5,14 @@ const { getArticles } = require("./my_modules/get_articles_from_web");
 const mongoose = require("mongoose");
 const { Article } = require("./models");
 
+if (!process.env.MONGODB_URI || !process.env.MONGODB_dB_NAME) {
+  console.error("FATAL: MONGODB_URI is not defined.");
+  process.exit(1);
+}
+
 const server = createServer(app);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URI).then(async () => {
   console.log("✅ Connected to MongoDB");
   console.log("Checking New Articles");
@@ -16,10 +21,12 @@ mongoose.connect(process.env.MONGODB_URI).then(async () => {
   console.log("Storing New Articles: " + newArticles.length);
 
   if (status && newArticles.length > 0)
-    Article.saveAll(newArticles, (result) => {
-      if (result.status) console.log("Saved");
-      else console.log(result.message);
-    });
+    Article.saveAll(newArticles)
+      .then((result) => {
+        if (result.status) console.log("Saved");
+        else console.log(result.message);
+      })
+      .catch((err) => console.log(err.message));
 });
 
 server.listen(port, () => {

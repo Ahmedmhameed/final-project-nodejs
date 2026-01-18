@@ -4,6 +4,7 @@ const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const compression = require("compression");
+const hpp = require("hpp");
 
 module.exports = {
   globale: (app) => {
@@ -20,7 +21,8 @@ module.exports = {
     });
     app.use(limiter);
     app.use(helmet());
-    app.use(express.json());
+    app.use(hpp());
+    app.use(express.json({ limit: "10kb" })); // Adjust limit as needed
     app.use((req, res, next) => {
       Object.defineProperty(req, "query", {
         value: { ...req.query },
