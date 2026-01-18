@@ -3,4 +3,5 @@ module.exports = {
   userValidator: require("./user"),
   loginValidator: require("./login"),
   likeValidator: require("./like"),
+  paginnationValidator: require("./pagination"),
 };

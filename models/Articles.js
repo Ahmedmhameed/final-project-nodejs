@@ -23,12 +23,22 @@ class Article {
       }
     });
   }
-  static getAllArticles() {
+  static getAllArticles(page, limit) {
     return new Promise((resolve, reject) => {
       Article.articaleDbConnection(async (collection) => {
         try {
-          const articles = await collection.find({}).toArray();
-          resolve({ status: true, data: articles });
+          let articles;
+          if (page && limit) {
+            const skip = (page - 1) * limit;
+            articles = await collection
+              .find({})
+              .skip(skip)
+              .limit(limit)
+              .toArray();
+          } else {
+            articles = await collection.find({}).toArray();
+          }
+          resolve({ status: true, data: articles, page, limit });
         } catch (err) {
           reject({ status: false, message: err.message });
         }

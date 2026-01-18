@@ -1,7 +1,16 @@
 const { Article } = require("../models");
+const createHttpError = require("http-errors");
+const { paginnationValidator } = require("../validators");
 
 const getArticles = (req, res, next) => {
-  Article.getAllArticles()
+  let page = parseInt(req.query.page) || 1;
+  let limit = parseInt(req.query.limit) || 10;
+  const validationResult = paginnationValidator.validate({ page, limit });
+  if (validationResult.error) {
+    page = 1;
+    limit = 10;
+  }
+  Article.getAllArticles(page, limit)
     .then((result) => {
       if (result.status) {
         res.status(200).json({ status: true, data: result.data });
