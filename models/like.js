@@ -51,7 +51,6 @@ class Like {
             resolv({
               check: true,
               message: "Like already Exist",
-              _like_id: like._id,
             });
           else resolv({ check: false });
         } catch (err) {
