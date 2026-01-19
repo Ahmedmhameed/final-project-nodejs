@@ -16,9 +16,7 @@ const addLike = (req, res, next) => {
       like.remove((status) => {
         if (status.status) {
           Article.updateLikes(likeData._article_id, Math.max(-1, 0));
-          return res.status(201).json({
-            status: true,
-          });
+          return global.returnJson(res, 200, true, "Success", null);
         } else {
           return next(createHttpError(500, status.message));
         }
@@ -27,9 +25,7 @@ const addLike = (req, res, next) => {
       like.save((status) => {
         if (status.status) {
           Article.updateLikes(likeData._article_id, 1);
-          return res.status(201).json({
-            status: true,
-          });
+          return global.returnJson(res, 201, true, "Success", null);
         } else {
           return next(createHttpError(500, status.message));
         }

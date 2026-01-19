@@ -17,21 +17,22 @@ const signUp = (req, res, next) => {
       if (result.check === true) {
         return next(createHttpError(409, result.message)); // 409 Conflict is more appropriate
       }
-
       user.save((status) => {
         if (status.status) {
-          res.status(201).json({
-            status: true,
-            message: "User has been created successfully",
-          });
-        } else {
-          next(createHttpError(500, status.message));
+          return global.returnJson(
+            res,
+            201,
+            true,
+            "User has been created successfully",
+            null,
+          );
         }
+        return next(createHttpError(500, status.message));
       });
     })
     .catch((err) => {
       const msg = err.message || "Unexpected error";
-      next(createHttpError(400, msg));
+      return next(createHttpError(400, msg));
     });
 };
 
@@ -47,13 +48,13 @@ const login = (req, res, next) => {
           },
           jwtSecretKey,
         );
-        res.status(200).json({ status: true, token: myToken });
+        return global.returnJson(res, 200, true, "Success", { token: myToken });
       } else {
-        next(createHttpError(result.code, result.message));
+        return next(createHttpError(result.code, result.message));
       }
     })
     .catch((err) => {
-      next(createHttpError(400, err.message));
+      return next(createHttpError(400, err.message));
     });
 };
 
